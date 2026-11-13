@@ -6,9 +6,10 @@ Most Hack The Box writeups end at the flag. This repository is the other half:
 the detections I would want if the same technique arrived on a network I was
 responsible for.
 
-Each rule comes from a box I actually completed, and the technique was executed
-on the target before the rule was written. Nothing here is copied from another
-writeup or generated from a technique list.
+Each rule comes from work I actually did - an HTB machine I completed, or the
+wardriving station I built and ran - and the technique was executed before the
+rule was written. Nothing here is copied from another writeup or generated from
+a technique list.
 
 ## Contents
 
@@ -18,6 +19,8 @@ writeup or generated from a technique list.
 | [`linux_sudo_editor_spawns_shell.yml`](rules/linux_sudo_editor_spawns_shell.yml) | `sudo vi` (or another editor) spawning a root shell | Linux process creation |
 | [`windows_browser_spawns_shell.yml`](rules/windows_browser_spawns_shell.yml) | Browser process starting `cmd.exe` / PowerShell (kiosk escape) | Windows process creation |
 | [`aws_s3_anonymous_put_object.yml`](rules/aws_s3_anonymous_put_object.yml) | Unsigned S3 `PutObject` / `PutObjectAcl` / `DeleteObject` | AWS CloudTrail |
+| [`linux_wifi_monitor_mode_enabled.yml`](rules/linux_wifi_monitor_mode_enabled.yml) | `iw` / `airmon-ng` / `iwconfig` switching a radio to monitor mode | Linux process creation |
+| [`linux_wifi_capture_tool_writes_pcap.yml`](rules/linux_wifi_capture_tool_writes_pcap.yml) | `hcxdumptool`, `airodump-ng` or `bettercap` writing a capture file | Linux process creation |
 
 Hunting notes cover cases where the event is not in process telemetry:
 
@@ -27,6 +30,9 @@ Hunting notes cover cases where the event is not in process telemetry:
   server access logs, and the bucket policy that makes it possible.
 - [Anonymous FTP](hunting/anonymous-ftp.md): vsftpd and proftpd log lines, and
   what a session that downloads an archive looks like.
+- [Wireless IDS, deauth and probe bursts](hunting/wireless-ids-deauth.md):
+  what the infrastructure sees while a capture is running, threshold-based
+  detection, and why the WIDS rule is documented instead of shipped.
 
 ## Validation
 

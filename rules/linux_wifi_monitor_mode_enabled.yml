@@ -1,0 +1,40 @@
+title: Wi-Fi Interface Switched to Monitor Mode
+id: 47c0aed6-e28b-40a6-9e0d-9d30998320dd
+status: experimental
+description: >-
+  A wireless interface moved from managed to monitor mode. A managed interface
+  only receives frames addressed to it, so monitor mode is the prerequisite for
+  every wireless attack and for every passive survey: once the radio accepts all
+  frames, other people's traffic - probe requests, beacons, EAPOL handshakes - is
+  in reach. The switch itself is a one-line command, which is why it is worth
+  alerting on rather than the tool that follows.
+references:
+  - https://github.com/the-ghostterminal/wifi-capture-station
+  - https://www.sigma-pro.org/documentation/logsource/process-creation
+author: TheGhostTerminal
+date: 2026/11/13
+tags:
+  - attack.credential-access
+  - attack.discovery
+  - attack.t1040
+logsource:
+  product: linux
+  category: process_creation
+detection:
+  selection_iproute:
+    CommandLine|contains: 'set type monitor'
+  selection_airmon:
+    CommandLine|contains|all:
+      - 'airmon-ng'
+      - 'start'
+  selection_iwconfig:
+    CommandLine|contains|all:
+      - 'iwconfig'
+      - 'mode monitor'
+  condition: 1 of selection_*
+falsepositives:
+  - Authorised wireless surveys, site surveys and penetration tests
+  - Unattended capture appliances that switch modes on boot, such as a Raspberry
+    Pi wardriving station
+  - A laptop owner troubleshooting their own radio
+level: medium

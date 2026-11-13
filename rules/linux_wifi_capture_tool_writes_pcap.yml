@@ -1,0 +1,39 @@
+title: Wi-Fi Capture Tool Writing a Packet Capture
+id: f6348823-e10e-49ba-8954-0eed5bd9720b
+status: experimental
+description: >-
+  A wireless capture tool started with an output file. Monitor mode on its own
+  collects nothing useful without a writer, so this is the second half of the
+  same chain: hcxdumptool, airodump-ng or bettercap persisting frames to disk.
+  hcxdumptool is the strongest signal of the three - it targets PMKID and EAPOL
+  handshakes specifically, which is credential material rather than a passive
+  survey.
+references:
+  - https://github.com/the-ghostterminal/wifi-capture-station
+  - https://github.com/ZerBea/hcxdumptool
+author: TheGhostTerminal
+date: 2026/11/13
+tags:
+  - attack.credential-access
+  - attack.t1040
+  - attack.t1110
+logsource:
+  product: linux
+  category: process_creation
+detection:
+  selection_hcxdumptool:
+    Image|endswith: '/hcxdumptool'
+    CommandLine|contains: ' -w'
+  selection_airodump:
+    Image|endswith: '/airodump-ng'
+    CommandLine|contains: ' -w'
+  selection_bettercap:
+    Image|endswith: '/bettercap'
+  condition: 1 of selection_*
+falsepositives:
+  - This repository's own capture run - the station calls hcxdumptool with -w on
+    every field deployment, so exclude the appliance by host or by parent
+    process before alerting
+  - Authorised wireless assessments and capture-the-flag labs
+  - Package maintainers and developers testing hcxdumptool locally
+level: high
