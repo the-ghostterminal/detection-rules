@@ -21,6 +21,7 @@ a technique list.
 | [`aws_s3_anonymous_put_object.yml`](rules/aws_s3_anonymous_put_object.yml) | Unsigned S3 `PutObject` / `PutObjectAcl` / `DeleteObject` | AWS CloudTrail |
 | [`linux_wifi_monitor_mode_enabled.yml`](rules/linux_wifi_monitor_mode_enabled.yml) | `iw` / `airmon-ng` / `iwconfig` switching a radio to monitor mode | Linux process creation |
 | [`linux_wifi_capture_tool_writes_pcap.yml`](rules/linux_wifi_capture_tool_writes_pcap.yml) | `hcxdumptool`, `airodump-ng` or `bettercap` writing a capture file | Linux process creation |
+| [`linux_interpreter_cap_setuid_root_shell.yml`](rules/linux_interpreter_cap_setuid_root_shell.yml) | Capable Python interpreter calling `setuid(0)` and spawning a shell | Linux process creation |
 
 Hunting notes cover cases where the event is not in process telemetry:
 
@@ -75,7 +76,7 @@ auditd or an EDR agent rather than Sysmon for Linux.
 
 ## Scope and honest limitations
 
-- **Four rules is not a detection programme.** They cover techniques I have run
+- **Seven rules is not a detection programme.** They cover techniques I have run
   by hand; there is no coverage claim beyond that.
 - **False positives are listed per rule** because every one of them has a
   legitimate edge case. The browser rule is the loudest: enterprise launchers
@@ -96,5 +97,8 @@ auditd or an EDR agent rather than Sysmon for Linux.
   `COPY ... TO PROGRAM` to a shell.
 - [Three](https://github.com/the-ghostterminal/htb-writeups/blob/main/starting-point/three.md):
   virtual host discovery, a public S3 bucket, anonymous write to the web root.
+- [CAP](https://github.com/the-ghostterminal/htb-writeups/blob/main/cap.md):
+  another user's capture through an IDOR, cleartext FTP credentials, and
+  `cap_setuid` on a Python interpreter.
 
 Written by [TheGhostTerminal](https://github.com/the-ghostterminal).

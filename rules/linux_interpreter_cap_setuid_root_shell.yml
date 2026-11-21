@@ -1,0 +1,42 @@
+title: Capable Python Interpreter Sets UID to Root and Spawns a Shell
+id: ea1d989b-fe3d-4abb-9486-44615ee9474e
+status: experimental
+description: >-
+  A Python interpreter running with the cap_setuid capability calls setuid(0)
+  and then spawns an interactive shell. On systems that grant cap_setuid to an
+  interpreter, this turns a low-privileged account into root without sudo.
+references:
+  - https://github.com/the-ghostterminal/htb-writeups/blob/main/cap.md
+author: TheGhostTerminal
+date: 2026/11/21
+tags:
+  - attack.privilege-escalation
+  - attack.t1548.003
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '/python'
+      - '/python3'
+      - '/python3.8'
+      - '/python3.9'
+      - '/python3.10'
+      - '/python3.11'
+      - '/python3.12'
+  selection_cmd:
+    ParentCommandLine|contains:
+      - 'setuid(0)'
+      - 'setuid( 0)'
+  selection_child:
+    Image|endswith:
+      - '/sh'
+      - '/bash'
+      - '/dash'
+      - '/zsh'
+  condition: selection_parent and selection_cmd and selection_child
+falsepositives:
+  - Administrative scripts that intentionally drop to root before launching a shell
+  - Service wrappers that use a capable interpreter for privilege transitions
+level: high
